@@ -1,0 +1,93 @@
+[
+  {
+    "id": "01",
+    "title": "What Bigtable Is",
+    "slides": 13,
+    "excerpt": "Welcome to the first deck of \"Bigtable, Visually\". This deck is the map for the whole series. It answers three questions. What problem was Bigtable built to solve? What is it, in one sentence? And what are its main parts and how do they fit together? Bigtable is a storage system Google started building around early 2004, ran in production from April 2005, and described in a paper at the OSDI conference in November 2006, where it won a Best Paper award. Since 2015 anyone can rent it as Cloud Bigtable. Throughout the series we keep two eras apart: \"2006 paper\" means the internal system the paper describes, and \"Cloud Bigtable\" means the managed service as Google documents it in 2026. Every slide has one picture and one real-world example. The full explanation is in these notes, so you can study the deck on your own.",
+    "download": "01 What Bigtable Is.pptx"
+  },
+  {
+    "id": "02",
+    "title": "Distributed Systems Basics",
+    "slides": 13,
+    "excerpt": "This is deck 02 of \"Bigtable, Visually\", in the Foundations part of the series. Bigtable is a distributed system: a group of computers that cooperate over a network and try to look like one system to the people using it. Each computer is a node. Nodes cannot see each other. All they have are messages, and messages can be late, lost or never answered. Almost every idea in this deck is a way of coping with that one fact. Ten short concept slides cover six ideas, each with a picture and an everyday example: failures are normal; splitting data by hash or by range; keeping copies; keeping exactly one leader with leases; agreeing by majority; and what a reader may see after a write. The last content slide maps every idea onto Bigtable, so you can recognise them when later decks open up the machine. If you already know sharding, leases and Paxos, skim the pictures and jump to the map slide.",
+    "download": "02 Distributed Systems Basics.pptx"
+  },
+  {
+    "id": "03",
+    "title": "Storage Engine Basics",
+    "slides": 13,
+    "excerpt": "A storage engine is the part of a database that decides how data is laid out in memory and on disk, and how it is written and found again. Every storage engine answers three questions: where does a new write go first, how does it survive a crash, and how do you find it again quickly among billions of others?\n\nThis deck builds Bigtable's answers from the hardware up. Most of them follow from one fact: writing bytes in order is cheap, and jumping around is expensive. From there we meet the write-ahead log, group commit, the two families of storage engines (B-trees and LSM-trees), sorted files with an index, the benefits of files that never change, and short previews of compression, caching and Bloom filters.\n\nThe last content slide shows that Bigtable is an LSM-tree per tablet, spread over many machines. Later decks (06, 08, 09) open each part in detail. The running example is a fictional payments platform.",
+    "download": "03 Storage Engine Basics.pptx"
+  },
+  {
+    "id": "04",
+    "title": "The Data Model",
+    "slides": 14,
+    "excerpt": "This deck takes apart the paper\u2019s one-sentence definition of Bigtable: a \u201csparse, distributed, persistent multidimensional sorted map\u201d. By the end you should be able to point at any value and say its full address (row key, column family, qualifier, timestamp), predict how row keys sort, explain what a column family controls, describe how versions are kept and garbage-collected, and model a real workload (a payments ledger) as a tall table. Throughout, we separate what the 2006 paper says from what Cloud Bigtable does as of 2026. The single most important lesson: the row key is the only index Bigtable gives you, so the key you choose decides which rows are neighbours, which queries are cheap, and how the load spreads across servers.",
+    "download": "04 The Data Model.pptx"
+  },
+  {
+    "id": "05",
+    "title": "Reading and Writing - the API",
+    "slides": 14,
+    "excerpt": "This deck is about the calls a program makes to Bigtable: its API (application programming interface). The API is small on purpose. The 2006 paper describes it in about one page: create and delete tables and column families, write and delete values, look up one row, scan a range of rows, plus a few power tools: single-row transactions, integer counters, batched writes across rows, Sawzall scripts that run inside the servers, and wrappers for MapReduce jobs. Every idea survives in Cloud Bigtable, mostly under new names, and each slide maps the 2006 call to today's Data API and Python client. The running examples are the paper's Webtable (one row per web page, keyed by the reversed URL) and a fictional payments ledger whose row key is acct#<account>#<reverse timestamp>, with column families txn and risk. Colours are fixed across the series: amber for writes, teal for reads, violet for the control plane, cobalt for \"look here\".",
+    "download": "05 Reading and Writing - the API.pptx"
+  },
+  {
+    "id": "06",
+    "title": "The Building Blocks",
+    "slides": 14,
+    "excerpt": "Bigtable is not one program that does everything. The 2006 paper (section 4, \"Building Blocks\") says it stands on other Google infrastructure: GFS, a distributed file system that holds its log and data files; SSTable, the sorted file format those data files use; Chubby, a small lock service that settles who is in charge; and a cluster management system that starts, places and restarts its processes. MapReduce jobs then use whole tables as their input and output. This deck opens each of those parts in turn, with one picture per idea and an everyday example for each. The pattern to watch for is the same in every part: a small control piece that knows \"where\" or \"who\", kept off the path where the bytes travel. Where Cloud Bigtable (2026) differs from the 2006 design, the slides say so: Colossus has replaced GFS, and the public docs do not describe a Chubby equivalent.",
+    "download": "06 The Building Blocks.pptx"
+  },
+  {
+    "id": "07",
+    "title": "Architecture - Finding and Owning Data",
+    "slides": 13,
+    "excerpt": "This deck opens up the machine. Deck 06 introduced the building blocks: GFS, SSTables, Chubby and the cluster manager. Here they come together as Bigtable's three moving parts. You will see why the master can stay off the data path, how a table that starts as one tablet ends up as many tablets spread over many servers, how a client finds the one server holding a row in three hops from a cold start without asking the master, and how lock files in Chubby make sure a tablet never has two owners, even when the network breaks. Everything here describes the 2006 paper's design (section 5). Cloud Bigtable keeps the same shape but hides the internals; where it differs, the notes say so.",
+    "download": "07 Architecture - Finding and Owning Data.pptx"
+  },
+  {
+    "id": "08",
+    "title": "Write Path, Read Path, Compactions",
+    "slides": 14,
+    "excerpt": "This deck opens up a single tablet server and follows what it does with your data. Deck 07 ended when a request reached the right tablet server; this deck starts there.\n\nYou will see four things. First, the write path: every write is appended to a commit log in GFS before it is placed in memory, and only then does the client hear \"ok\". Second, the read path: a read combines the in-memory buffer with every file of the tablet into one merged view, where the newest version wins and deletion markers hide old data. Third, compactions: three kinds of background job (minor, merging and major) that keep memory small, recovery short, reads fast, and that finally remove deleted data. Fourth, recovery: how a new server rebuilds a tablet after a crash using only what is in GFS and METADATA.\n\nThe running example is a fictional payments platform: one row per card payment, keyed acct#<account>#<reverse timestamp>. Numbers are from the 2006 paper unless marked \"Cloud Bigtable, 2026\".",
+    "download": "08 Write Path, Read Path, Compactions.pptx"
+  },
+  {
+    "id": "09",
+    "title": "Making It Fast",
+    "slides": 14,
+    "excerpt": "This deck covers Section 6 of the 2006 Bigtable paper: the refinements that turn the basic design from the earlier decks into a fast system. The basic design works, but it has costs. A read may have to look inside every SSTable of a tablet, and each look can cost a trip to disk, about 10 ms per seek in Jeff Dean\u2019s widely quoted 2009 latency table. Hundreds of tablets share one server and its writes, and crashes, moves and splits all need handling. We follow the paper\u2019s seven refinements in order: locality groups, compression, caching, Bloom filters, the commit-log design, faster tablet recovery, and exploiting immutability. The source\u2019s mnemonic for them is \u201cLucy Can Catch Big Crabs Really Instantly\u201d. Each slide shows the mechanism, a real-world example and the key numbers. Numbers are from the 2006 paper unless marked otherwise. In Cloud Bigtable (2026) most of these knobs are managed by the service, but the habits behind them, good row keys and sensible column families, still pay off.",
+    "download": "09 Making It Fast.pptx"
+  },
+  {
+    "id": "10",
+    "title": "Proof at Google",
+    "slides": 13,
+    "excerpt": "This deck covers the part of the 2006 Bigtable paper where the design meets reality: Section 7 (performance), Section 8 (real applications) and Section 9 (lessons). First we read the benchmarks the way an engineer should: every number is a bottleneck you can name. One tablet server did about 15,000 scan values per second but only about 1,200 random reads from GFS, and we will see exactly why. Then we add servers and watch scaling fall short of perfect, for reasons that apply to any distributed system. Next we visit the 2006 fleet (388 clusters, about 24,500 tablet servers) and three products whose schemas still teach good habits: Google Analytics, Google Earth and Personalized Search. We finish with four lessons the authors wrote down after more than a year in production. All numbers are from the 2006 paper unless a slide says Cloud Bigtable, 2026.",
+    "download": "10 Proof at Google.pptx"
+  },
+  {
+    "id": "11",
+    "title": "Cloud Bigtable Today",
+    "slides": 14,
+    "excerpt": "This deck jumps twenty years. The system in the 2006 paper never stopped running inside Google, and since 2015 anyone can rent it as Cloud Bigtable (Google's docs now mostly say just \"Bigtable\"). First we see what stayed the same, the engine: sorted rows, tablets, a log plus SSTables on a shared file system, single-row atomicity. Then what changed around it: Google runs it, frontends route requests, data rests in Colossus, and replication between clusters is built in. Next come the knobs you turn today: instances, clusters, nodes, storage type, autoscaling and app profiles, and what each does to latency, consistency and cost. Last, a tour of modern features (SQL, change streams, Data Boost, materialized views, aggregate counters), grouped by the problem they solve. \"2006\" or \"the paper\" means the system the paper describes; \"Cloud Bigtable\" or \"today\" means the service as documented in 2026. Cloud figures change, so check the current docs before designing around one.",
+    "download": "11 Cloud Bigtable Today.pptx"
+  },
+  {
+    "id": "12",
+    "title": "Schema Design and Real Workloads",
+    "slides": 14,
+    "excerpt": "This deck turns the Bigtable data model into design decisions. In Bigtable the row key is the index, the sort order and the load balancer at once: it decides which questions are cheap, which node does the work, and how big a row can grow. We start from the questions an application asks and derive a key from them. Then we see why some keys send every write to one node (a hotspot), why automatic splitting cannot rescue them, and what the four standard fixes cost. After that come reverse timestamps, the three shapes for time-series rows, column families with garbage-collection (GC) rules, and how to read the Key Visualizer heatmap. Three worked examples (two million sensors, a payments ledger and an activity inbox) apply the same recipe end to end. Numbers are Cloud Bigtable values as of 2026 unless marked as the 2006 paper; check the docs for current limits. All example data is fictional.",
+    "download": "12 Schema Design and Real Workloads.pptx"
+  },
+  {
+    "id": "13",
+    "title": "Bigtable in the Big Picture",
+    "slides": 14,
+    "excerpt": "This is the last deck of the series, and it teaches nothing brand new. It does two jobs. First, it zooms out: one 2006 paper became the blueprint for a whole family of databases, and Google\u2019s own next systems grew out of what Bigtable could not do. We draw that family tree, translate between the family\u2019s vocabularies, compare Bigtable with Cassandra on how they spread and copy data, and end with a practical guide to choosing a Google Cloud database, including when Bigtable is the wrong tool. Second, it zooms in: one fictional payment is written, read back and survives the crash of the machine that holds it, so every part from the earlier decks appears in one story. As always, \"2006\" or \"the paper\" means the system the paper describes, and \"Cloud Bigtable\" means the service as documented in 2026.",
+    "download": "13 Bigtable in the Big Picture.pptx"
+  }
+]

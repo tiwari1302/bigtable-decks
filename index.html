@@ -4,41 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bigtable Decks</title>
-<meta name="description" content="Slide decks on Google Bigtable, in learning order.">
-<style>
-  :root { color-scheme: light dark; }
-  body {
-    margin: 0 auto;
-    max-width: 38rem;
-    padding: 3rem 1.25rem 4rem;
-    font: 17px/1.45 Georgia, "Iowan Old Style", serif;
-  }
-  h1 { font-weight: 500; letter-spacing: -0.03em; margin-bottom: 0.3rem; }
-  p { color: #5c564c; }
-  @media (prefers-color-scheme: dark) { p { color: #b7aea0; } }
-  ol { padding-left: 1.4rem; }
-  li { margin: 0.45rem 0; }
-  a { color: inherit; }
-</style>
+<meta name="description" content="Thirteen chapters on Google Bigtable. Read them in the browser, or download the PowerPoint.">
+<link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-<main>
+<main class="wrap">
   <h1>Bigtable Decks</h1>
-  <p>Thirteen slide decks, in learning order. Each link downloads a PowerPoint file.</p>
-  <ol>
-    <li><a href="01%20What%20Bigtable%20Is.pptx">What Bigtable Is</a></li>
-    <li><a href="02%20Distributed%20Systems%20Basics.pptx">Distributed Systems Basics</a></li>
-    <li><a href="03%20Storage%20Engine%20Basics.pptx">Storage Engine Basics</a></li>
-    <li><a href="04%20The%20Data%20Model.pptx">The Data Model</a></li>
-    <li><a href="05%20Reading%20and%20Writing%20-%20the%20API.pptx">Reading and Writing — the API</a></li>
-    <li><a href="06%20The%20Building%20Blocks.pptx">The Building Blocks</a></li>
-    <li><a href="07%20Architecture%20-%20Finding%20and%20Owning%20Data.pptx">Architecture — Finding and Owning Data</a></li>
-    <li><a href="08%20Write%20Path%2C%20Read%20Path%2C%20Compactions.pptx">Write Path, Read Path, Compactions</a></li>
-    <li><a href="09%20Making%20It%20Fast.pptx">Making It Fast</a></li>
-    <li><a href="10%20Proof%20at%20Google.pptx">Proof at Google</a></li>
-    <li><a href="11%20Cloud%20Bigtable%20Today.pptx">Cloud Bigtable Today</a></li>
-    <li><a href="12%20Schema%20Design%20and%20Real%20Workloads.pptx">Schema Design and Real Workloads</a></li>
-    <li><a href="13%20Bigtable%20in%20the%20Big%20Picture.pptx">Bigtable in the Big Picture</a></li>
+  <p class="lede">Thirteen chapters, in learning order. Open one to read it, or take the PowerPoint.</p>
+  <ol class="chapters">
+    <li class="entry"><a class="chapter" href="chapters/01/"><h2>01 · What Bigtable Is</h2><p>Welcome to the first deck of &quot;Bigtable, Visually&quot;. This deck is the map for the whole series. It answers three questions. What problem was Bigtable built to solve? What is it, in one sentence? And what are its main parts…</p><div class="meta"><span>13 slides</span></div></a><a class="dl" href="01%20What%20Bigtable%20Is.pptx" download>PowerPoint</a></li><li class="entry"><a class="chapter" href="chapters/02/"><h2>02 · Distributed Systems Basics</h2><p>This is deck 02 of &quot;Bigtable, Visually&quot;, in the Foundations part of the series. Bigtable is a distributed system: a group of computers that cooperate over a network and try to look like one system to the people using it.…</p><div class="meta"><span>13 slides</span></div></a><a class="dl" href="02%20Distributed%20Systems%20Basics.pptx" download>PowerPoint</a></li><li class="entry"><a class="chapter" href="chapters/03/"><h2>03 · Storage Engine Basics</h2><p>A storage engine is the part of a database that decides how data is laid out in memory and on disk, and how it is written and found again. Every storage engine answers three questions: where does a new write go first, ho…</p><div class="meta"><span>13 slides</span></div></a><a class="dl" href="03%20Storage%20Engine%20Basics.pptx" download>PowerPoint</a></li><li class="entry"><a class="chapter" href="chapters/04/"><h2>04 · The Data Model</h2><p>This deck takes apart the paper’s one-sentence definition of Bigtable: a “sparse, distributed, persistent multidimensional sorted map”. By the end you should be able to point at any value and say its full address (row ke…</p><div class="meta"><span>14 slides</span></div></a><a class="dl" href="04%20The%20Data%20Model.pptx" download>PowerPoint</a></li><li class="entry"><a class="chapter" href="chapters/05/"><h2>05 · Reading and Writing - the API</h2><p>This deck is about the calls a program makes to Bigtable: its API (application programming interface). The API is small on purpose. The 2006 paper describes it in about one page: create and delete tables and column famil…</p><div class="meta"><span>14 slides</span></div></a><a class="dl" href="05%20Reading%20and%20Writing%20-%20the%20API.pptx" download>PowerPoint</a></li><li class="entry"><a class="chapter" href="chapters/06/"><h2>06 · The Building Blocks</h2><p>Bigtable is not one program that does everything. The 2006 paper (section 4, &quot;Building Blocks&quot;) says it stands on other Google infrastructure: GFS, a distributed file system that holds its log and data files; SSTable, th…</p><div class="meta"><span>14 slides</span></div></a><a class="dl" href="06%20The%20Building%20Blocks.pptx" download>PowerPoint</a></li><li class="entry"><a class="chapter" href="chapters/07/"><h2>07 · Architecture - Finding and Owning Data</h2><p>This deck opens up the machine. Deck 06 introduced the building blocks: GFS, SSTables, Chubby and the cluster manager. Here they come together as Bigtable&#x27;s three moving parts. You will see why the master can stay off th…</p><div class="meta"><span>13 slides</span></div></a><a class="dl" href="07%20Architecture%20-%20Finding%20and%20Owning%20Data.pptx" download>PowerPoint</a></li><li class="entry"><a class="chapter" href="chapters/08/"><h2>08 · Write Path, Read Path, Compactions</h2><p>This deck opens up a single tablet server and follows what it does with your data. Deck 07 ended when a request reached the right tablet server; this deck starts there.
+
+You will see four things. First, the write path: e…</p><div class="meta"><span>14 slides</span></div></a><a class="dl" href="08%20Write%20Path,%20Read%20Path,%20Compactions.pptx" download>PowerPoint</a></li><li class="entry"><a class="chapter" href="chapters/09/"><h2>09 · Making It Fast</h2><p>This deck covers Section 6 of the 2006 Bigtable paper: the refinements that turn the basic design from the earlier decks into a fast system. The basic design works, but it has costs. A read may have to look inside every …</p><div class="meta"><span>14 slides</span></div></a><a class="dl" href="09%20Making%20It%20Fast.pptx" download>PowerPoint</a></li><li class="entry"><a class="chapter" href="chapters/10/"><h2>10 · Proof at Google</h2><p>This deck covers the part of the 2006 Bigtable paper where the design meets reality: Section 7 (performance), Section 8 (real applications) and Section 9 (lessons). First we read the benchmarks the way an engineer should…</p><div class="meta"><span>13 slides</span></div></a><a class="dl" href="10%20Proof%20at%20Google.pptx" download>PowerPoint</a></li><li class="entry"><a class="chapter" href="chapters/11/"><h2>11 · Cloud Bigtable Today</h2><p>This deck jumps twenty years. The system in the 2006 paper never stopped running inside Google, and since 2015 anyone can rent it as Cloud Bigtable (Google&#x27;s docs now mostly say just &quot;Bigtable&quot;). First we see what stayed…</p><div class="meta"><span>14 slides</span></div></a><a class="dl" href="11%20Cloud%20Bigtable%20Today.pptx" download>PowerPoint</a></li><li class="entry"><a class="chapter" href="chapters/12/"><h2>12 · Schema Design and Real Workloads</h2><p>This deck turns the Bigtable data model into design decisions. In Bigtable the row key is the index, the sort order and the load balancer at once: it decides which questions are cheap, which node does the work, and how b…</p><div class="meta"><span>14 slides</span></div></a><a class="dl" href="12%20Schema%20Design%20and%20Real%20Workloads.pptx" download>PowerPoint</a></li><li class="entry"><a class="chapter" href="chapters/13/"><h2>13 · Bigtable in the Big Picture</h2><p>This is the last deck of the series, and it teaches nothing brand new. It does two jobs. First, it zooms out: one 2006 paper became the blueprint for a whole family of databases, and Google’s own next systems grew out of…</p><div class="meta"><span>14 slides</span></div></a><a class="dl" href="13%20Bigtable%20in%20the%20Big%20Picture.pptx" download>PowerPoint</a></li>
   </ol>
 </main>
 </body>
